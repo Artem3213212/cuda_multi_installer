@@ -1,5 +1,4 @@
 import os
-import cuda_addonman
 from cudatext import *
 
 TEST_CFG = os.path.join(app_path(APP_DIR_SETTINGS), 'history.json')
@@ -211,7 +210,11 @@ class Command:
         print('Not found: '+kind+' '+name)
         
     def open_menu(self):
+
+        global cuda_addonman
+        import cuda_addonman # do it here for faster on_start
         self.load_repo()
+
         langs = list(PLUGINS.keys())
         langs.sort()
         h=app_proc(PROC_GET_GUI_HEIGHT,'check')
