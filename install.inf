@@ -1,0 +1,16 @@
+[info]
+title=Multi_Installer
+desc=Some description
+type=cudatext-plugin
+subdir=cuda_multi_installer
+homepage=
+
+[item1]
+section=events
+events=on_start
+
+[item2]
+section=commands
+caption=Multi Installer
+method=OpenMenu
+
