@@ -184,7 +184,7 @@ class Command:
         return False
         
     def install(self,kind,name):
-        print('  '+kind+' '+name)
+        print('Installing: '+kind+' '+name)
         for i in self.packets:
             if i['kind']==kind and i['name']==name:
                 state='Installing: %s %s'%(kind,name)
@@ -206,28 +206,39 @@ class Command:
                         with open(filename_ver, 'w') as f:
                             f.write(i['v'])
                 return
-        print('  '+kind+' '+name+' - Not found')
+        print('Not found: '+kind+' '+name)
         
     def open_menu(self):
         self.load_repo()
         langs = list(PLUGINS.keys())
         langs.sort()
-        to_install = []
-        res = dlg_custom('Multi Installer', 300, 300, '\n'.join([
-            '\1'.join(['type=label','pos=5,5,200,0','cap=Select languages:']),
-            '\1'.join(['type=button','pos=235,265,295,295','cap=Next']),
-            '\1'.join(['type=checklistbox','pos=5,25,295,260','items='+
-                '\t'.join(langs)
-                ]),
-            '\1'.join(['type=button','pos=5,265,65,295','cap=Skip'])
-            ]))
+        h=app_proc(PROC_GET_GUI_HEIGHT,'check')
+
         to_install = {}
         for i in CLASSES:
             to_install[i] = []
-        h=app_proc(PROC_GET_GUI_HEIGHT,'check')
-        if res!=None:
-            if res[0]==1:
-                for i,f in enumerate(map(str_to_bool,res[1].split('\n')[2].split(';')[1].split(','))):
+
+        RES_LIST = 1
+        RES_NEXT = 3
+        res = dlg_custom('Multi Installer', 300, 300, '\n'.join([
+            '\1'.join(['type=label','pos=5,5,200,0','cap=Select languages:']),
+            '\1'.join(['type=checklistbox','pos=5,25,295,260','items='+
+                '\t'.join(langs)
+                ]),
+            '\1'.join(['type=button','pos=5,265,65,295','cap=Cancel']),
+            '\1'.join(['type=button','pos=235,265,295,295','cap=Next']),
+            ]),
+            get_dict=True
+            )
+        if res is None:
+            return
+        if res['clicked']!=RES_NEXT:
+            return
+            
+        if True:
+            if True:
+                res_list = res[RES_LIST].split(',')
+                for i,f in enumerate(map(str_to_bool,res_list)):
                     if f:
                         cl = 0
                         line = 0
