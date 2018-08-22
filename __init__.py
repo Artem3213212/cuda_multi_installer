@@ -1,4 +1,4 @@
-import os,cuda_addonman
+import os,cuda_addonman,cudatext
 from cudatext import *
 
 T_LEXER='lexer'
@@ -162,30 +162,27 @@ COLUMN_LEN=20
 class Command:
     
     def __init__(self):
-        pass
-        
-    def show_progerss(self):
         self.h=dlg_proc(0, DLG_CREATE)
         dlg_proc(self.h, DLG_PROP_SET, prop={
-                    'cap': 'progerss',
-                    'x': 100,
-                    'y': 50,
+                    'cap': 'progress',
                     'w': 100,
                     'h': 30,
-                    'w_min': 200,
-                    'h_min': 300,
-                    'border': DBORDER_TOOL,
-                    'topmost': True})
-        self.n=dlg_proc(self.h, DLG_CTL_ADD, 'lable')
+                    'border': DBORDER_TOOL})
+        self.n=dlg_proc(self.h, DLG_CTL_ADD, 'label')
         dlg_proc(self.h, DLG_CTL_PROP_SET, index=self.n, prop={
-            'cap': 'Installing... Plaese wait.',
+            'name': 'label0',
+            'cap': 'Installing... Please wait.',
             'x': 5,
             'y': 5,
             'w': 50})
+        
+    def show_progerss(self):
+        cudatext.
+        dlg_proc(self.h, DLG_SHOW_NONMODAL)
+                
             
-    def unshow_progerss(self):
-        dlg_proc(self.n, DLG_CTL_DELETE)
-        dlg_proc(self.h, DLG_CTL_DELETE)
+    def hide_progerss(self):
+        dlg_proc(self.h, DLG_HIDE)
         
     def load_repo(self):
         self.packets = cuda_addonman.work_remote.get_remote_addons_list(cuda_addonman.opt.ch_def+cuda_addonman.opt.ch_user)
@@ -266,9 +263,9 @@ class Command:
                                             cl+=1
                                             line = 0
                                         if not self.is_installed(curr_class,pl):
-                                            UI.append('\1'.join(['type=check','pos='+str(5+300*cl)+','+str(line*h)+','+str(295+300*cl)+','+str(line*20+25),'cap='+pl,'en=1']))
+                                            UI.append('\1'.join(['type=check','pos='+str(5+300*cl)+','+str(line*h)+','+str(295+300*cl)+','+str(line*20+25),'cap='+pl.replace('_',' '),'en=1']))
                                         else:
-                                            UI.append('\1'.join(['type=check','pos='+str(5+300*cl)+','+str(line*h)+','+str(295+300*cl)+','+str(line*20+25),'cap='+pl,'en=0']))                                            
+                                            UI.append('\1'.join(['type=check','pos='+str(5+300*cl)+','+str(line*h)+','+str(295+300*cl)+','+str(line*20+25),'cap='+pl.replace('_',' '),'en=0']))                                            
                                         UI_reg.append((curr_class,pl))
                                         line+=1
                         if cl!=0:
@@ -311,9 +308,10 @@ class Command:
                 self.install('plugin',i)
             for i in to_install[T_OTHER]:
                 self.install('plugin',i)
-            self.unshow_progerss()
+            self.hide_progerss()
         
                                         
 
     def on_start(self, ed_self):
+        #if (App_path(),''
         self.open_menu()

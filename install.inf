@@ -12,5 +12,5 @@ events=on_start
 [item2]
 section=commands
 caption=Multi Installer
-method=OpenMenu
+method=open_menu
 
