@@ -184,7 +184,7 @@ class Command:
         return False
         
     def install(self,kind,name):
-        #print('  '+kind+' '+name)
+        print('  '+kind+' '+name)
         for i in self.packets:
             if i['kind']==kind and i['name']==name:
                 state='Installing: %s %s'%(kind,name)
@@ -206,7 +206,7 @@ class Command:
                         with open(filename_ver, 'w') as f:
                             f.write(i['v'])
                 return
-        #print('  '+kind+' '+name+' - Not found')
+        print('  '+kind+' '+name+' - Not found')
         
     def open_menu(self):
         self.load_repo()
