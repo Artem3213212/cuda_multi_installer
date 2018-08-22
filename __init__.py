@@ -168,14 +168,13 @@ COLUMN_LEN=20
 
 class Command:
     
-    def __init__(self):
-        pass
-                
     def load_repo(self):
+
         self.packets = cuda_addonman.work_remote.get_remote_addons_list(cuda_addonman.opt.ch_def+cuda_addonman.opt.ch_user)
         self.installed_list = cuda_addonman.work_local.get_installed_list()
         
     def is_installed(self,kind,name):
+
         if kind in PLUGINS_CLASSES:
             return name in list(map(cuda_addonman.work_local.get_name_of_module,self.installed_list))
         elif kind == T_TREE:
@@ -185,6 +184,7 @@ class Command:
         return False
         
     def install(self,kind,name):
+
         print('Installing: '+kind+' '+name)
         for i in self.packets:
             if i['kind']==kind and i['name']==name:
@@ -325,5 +325,6 @@ class Command:
             msg_status('Multi Installer: done', True)
 
     def on_start(self, ed_self):
+
         if not os.path.exists(TEST_CFG):
             self.open_menu()
