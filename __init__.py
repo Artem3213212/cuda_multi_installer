@@ -1,5 +1,11 @@
-import os,cuda_addonman,cudatext
+import os
+import cuda_addonman
 from cudatext import *
+
+USER_JSON = os.path.join(app_path(APP_DIR_SETTINGS), 'user.json')
+
+def str_to_bool(s):
+    return s == '1'
 
 T_LEXER='lexer'
 T_LINTER='linter'
@@ -164,9 +170,11 @@ class Command:
     def __init__(self):
         self.h=dlg_proc(0, DLG_CREATE)
         dlg_proc(self.h, DLG_PROP_SET, prop={
-                    'cap': 'progress',
+                    'cap': 'Progress',
                     'w': 100,
                     'h': 30,
+                    'w_min': 100,
+                    'h_min': 30,
                     'border': DBORDER_TOOL})
         self.n=dlg_proc(self.h, DLG_CTL_ADD, 'label')
         dlg_proc(self.h, DLG_CTL_PROP_SET, index=self.n, prop={
@@ -177,7 +185,6 @@ class Command:
             'w': 50})
         
     def show_progerss(self):
-        cudatext.
         dlg_proc(self.h, DLG_SHOW_NONMODAL)
                 
             
@@ -223,14 +230,12 @@ class Command:
         print('Not found',name,'')
         
     def open_menu(self):
-        def str_to_bool(s):
-            return s == '1'
         self.load_repo()
         langs = list(PLUGINS.keys())
         langs.sort()
         to_install = []
-        res = dlg_custom('Plugins initialization', 300, 300, '\n'.join([
-            '\1'.join(['type=label','pos=5,5,200,0','cap=Select programming languages:']),
+        res = dlg_custom('Multi Installer', 300, 300, '\n'.join([
+            '\1'.join(['type=label','pos=5,5,200,0','cap=Select languages:']),
             '\1'.join(['type=button','pos=235,265,295,295','cap=Next']),
             '\1'.join(['type=checklistbox','pos=5,25,295,260','items='+
                 '\t'.join(langs)
@@ -308,10 +313,8 @@ class Command:
                 self.install('plugin',i)
             for i in to_install[T_OTHER]:
                 self.install('plugin',i)
-            self.hide_progerss()
-        
-                                        
+            self.hide_progerss()    
 
     def on_start(self, ed_self):
-        #if (App_path(),''
-        self.open_menu()
+        if not os.path.exists(USER_JSON):
+            self.open_menu()
