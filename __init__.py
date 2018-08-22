@@ -268,10 +268,15 @@ class Command:
                         UI = ['\1'.join(['type=button','pos='+str(235+300*cl)+','+str(line*h+5)+','+str(295+300*cl)+','+str(line*20+25),'cap=Next'])] + UI
                         line+=1
                         cl+=1
-                        res2 = dlg_custom('Select add-ons - '+langs[i], 300*cl, line*h+15, '\n'.join(UI))
+                        res2 = dlg_custom(
+                                'Select add-ons - '+langs[i], 
+                                300*cl, 
+                                line*h+15, 
+                                '\n'.join(UI),
+                                get_dict=True
+                                )
                         if res2:
-                            if res2[0]==0:
-                                res2=res2[1].split('\n')
+                            if res2['clicked']==0:
                                 for ii in range(len(UI_reg)):
                                     if UI_reg[ii] and res2[ii]=='1':
                                         to_install[UI_reg[ii][0]].append(UI_reg[ii][1])
