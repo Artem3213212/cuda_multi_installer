@@ -3,6 +3,7 @@ from cudatext import *
 from .db import *
 
 TEST_CFG = os.path.join(app_path(APP_DIR_SETTINGS), 'history.json')
+URL_DB = 'https://raw.githubusercontent.com/Alexey-T/CudaText-registry/master/multi_inst/db.py'
 
 def str_to_bool(s):
     return s == '1'
