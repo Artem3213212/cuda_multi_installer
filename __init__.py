@@ -1,5 +1,8 @@
-import os,cuda_addonman
+import os
+import cuda_addonman
 from cudatext import *
+
+USER_JSON = os.path.join(app_path(APP_DIR_SETTINGS), 'user.json')
 
 T_LEXER='lexer'
 T_LINTER='linter'
@@ -316,4 +319,6 @@ class Command:
                                         
 
     def on_start(self, ed_self):
-        self.open_menu()
+    
+        if not os.path.exists(USER_JSON):
+            self.open_menu()
