@@ -235,8 +235,9 @@ class Command:
         if res['clicked']!=RES_NEXT:
             return
             
-        res_list = res[RES_LIST].split(',')
-        for i,f in enumerate(map(str_to_bool,res_list)):
+        res_list = res[RES_LIST].split(';')[1].split(',')
+        res_list = map(str_to_bool,res_list) 
+        for i,f in enumerate(res_list):
             if f:
                 cl = 0
                 line = 0
@@ -263,7 +264,11 @@ class Command:
                                 line+=1
                 if cl!=0:
                     line=COLUMN_LEN
-                UI = ['\1'.join(['type=button','pos='+str(235+300*cl)+','+str(line*h+5)+','+str(295+300*cl)+','+str(line*20+25),'cap=Next'])] + UI
+                UI = ['\1'.join([
+                    'type=button',
+                    'pos='+str(215+300*cl)+','+str(line*h+5)+','+str(295+300*cl)+','+str(line*20+25),
+                    'cap=Next'
+                    ])] + UI
                 line+=1
                 cl+=1
                 res2 = dlg_custom(
