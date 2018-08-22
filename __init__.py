@@ -249,7 +249,11 @@ class Command:
                             if line in (COLUMN_LEN,COLUMN_LEN-1):
                                 cl+=1
                                 line = 0
-                            UI.append('\1'.join(['type=label','pos='+str(5+300*cl)+','+str(line*h+5)+','+str(295+300*cl)+','+str(line*20+25),'cap='+CLASSES_MSGS[curr_class]]))
+                            UI.append('\1'.join([
+                                            'type=label',
+                                            'pos='+str(5+300*cl)+','+str(line*h+5)+','+str(295+300*cl)+','+str(line*20+25),
+                                            'cap='+CLASSES_MSGS[curr_class]
+                                            ]))
                             UI_reg.append(())
                             line+=1
                             for pl in pls:
@@ -257,18 +261,28 @@ class Command:
                                     cl+=1
                                     line = 0
                                 if not self.is_installed(curr_class,pl):
-                                    UI.append('\1'.join(['type=check','pos='+str(5+300*cl)+','+str(line*h)+','+str(295+300*cl)+','+str(line*20+25),'cap='+pl.replace('_',' '),'en=1']))
+                                    UI.append('\1'.join([
+                                                    'type=check',
+                                                    'pos='+str(5+300*cl)+','+str(line*h)+','+str(295+300*cl)+','+str(line*20+25),
+                                                    'cap='+pl.replace('_',' '),
+                                                    'en=1'
+                                                    ]))
                                 else:
-                                    UI.append('\1'.join(['type=check','pos='+str(5+300*cl)+','+str(line*h)+','+str(295+300*cl)+','+str(line*20+25),'cap='+pl.replace('_',' '),'en=0']))                                            
+                                    UI.append('\1'.join([
+                                                    'type=check',
+                                                    'pos='+str(5+300*cl)+','+str(line*h)+','+str(295+300*cl)+','+str(line*20+25),
+                                                    'cap='+pl.replace('_',' '),
+                                                    'en=0'
+                                                    ]))                                            
                                 UI_reg.append((curr_class,pl))
                                 line+=1
                 if cl!=0:
                     line=COLUMN_LEN
                 UI = ['\1'.join([
-                    'type=button',
-                    'pos='+str(215+300*cl)+','+str(line*h+5)+','+str(295+300*cl)+','+str(line*20+25),
-                    'cap=Next'
-                    ])] + UI
+                            'type=button',
+                            'pos='+str(215+300*cl)+','+str(line*h+5)+','+str(295+300*cl)+','+str(line*20+25),
+                            'cap=Next'
+                            ])] + UI
                 line+=1
                 cl+=1
                 res2 = dlg_custom(
