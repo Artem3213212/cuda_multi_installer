@@ -2,7 +2,7 @@ import os
 import cuda_addonman
 from cudatext import *
 
-USER_JSON = os.path.join(app_path(APP_DIR_SETTINGS), 'user.json')
+TEST_CFG = os.path.join(app_path(APP_DIR_SETTINGS), 'history.json')
 
 def str_to_bool(s):
     return s == '1'
@@ -322,5 +322,5 @@ class Command:
             msg_status('Multi Installer: done', True)
 
     def on_start(self, ed_self):
-        if not os.path.exists(USER_JSON):
+        if not os.path.exists(TEST_CFG):
             self.open_menu()
