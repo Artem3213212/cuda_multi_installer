@@ -1,9 +1,9 @@
 [info]
-title=Multi_Installer
-desc=Some description
+title=Multi Installer
+desc=Suggests to install add-ons for several popular languages
 type=cudatext-plugin
 subdir=cuda_multi_installer
-homepage=
+homepage=https://github.com/Artem3213212/cuda_multi_installer
 
 [item1]
 section=events
