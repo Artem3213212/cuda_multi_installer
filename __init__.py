@@ -164,7 +164,7 @@ class Command:
     def __init__(self):
         pass
         
-    def ShowProgerss(self):
+    def show_progerss(self):
         self.h=dlg_proc(0, DLG_CREATE)
         dlg_proc(self.h, DLG_PROP_SET, prop={
                     'cap': 'progerss',
@@ -183,16 +183,15 @@ class Command:
             'y': 5,
             'w': 50})
             
-    def UnShowProgerss(self):
-        self.h=dlg_proc(0, DLG_CREATE)
+    def unshow_progerss(self):
         dlg_proc(self.n, DLG_CTL_DELETE)
         dlg_proc(self.h, DLG_CTL_DELETE)
         
-    def LoadRepo(self):
+    def load_repo(self):
         self.packets = cuda_addonman.work_remote.get_remote_addons_list(cuda_addonman.opt.ch_def+cuda_addonman.opt.ch_user)
         self.installed_list = cuda_addonman.work_local.get_installed_list()
         
-    def IsInstalled(self,kind,name):
+    def is_installed(self,kind,name):
         if kind in PLUGINS_CLASSES:
             return name in list(map(cuda_addonman.work_local.get_name_of_module,self.installed_list))
         elif kind == T_TREE:
@@ -201,7 +200,7 @@ class Command:
             return 'cuda_lint_'+name.lower() in self.installed_list
         return False
         
-    def Install(self,kind,name):
+    def install(self,kind,name):
         print(name)
         for i in self.packets:
             if i['kind']==kind and i['name']==name:
@@ -222,14 +221,14 @@ class Command:
                     if dir_addon:
                         filename_ver = os.path.join(dir_addon, 'v.inf')
                         with open(filename_ver, 'w') as f:
-                            f.write(version)
+                            f.write(i['v'])
                 return
         print('Not found',name,'')
         
-    def OpenMenu(self):
+    def open_menu(self):
         def str_to_bool(s):
             return s == '1'
-        self.LoadRepo()
+        self.load_repo()
         langs = list(PLUGINS.keys())
         langs.sort()
         to_install = []
@@ -266,7 +265,7 @@ class Command:
                                         if line==COLUMN_LEN:
                                             cl+=1
                                             line = 0
-                                        if not self.IsInstalled(curr_class,pl):
+                                        if not self.is_installed(curr_class,pl):
                                             UI.append('\1'.join(['type=check','pos='+str(5+300*cl)+','+str(line*h)+','+str(295+300*cl)+','+str(line*20+25),'cap='+pl,'en=1']))
                                         else:
                                             UI.append('\1'.join(['type=check','pos='+str(5+300*cl)+','+str(line*h)+','+str(295+300*cl)+','+str(line*20+25),'cap='+pl,'en=0']))                                            
@@ -290,29 +289,31 @@ class Command:
                 f = True
                 break
         if f:            
+            self.show_progerss()
             for i in to_install[T_LEXER]:
-                self.Install(T_LEXER,i)
+                self.install(T_LEXER,i)
             if to_install[T_LINTER]:
-                if not self.IsInstalled('plugin','CudaLint'):
-                    self.Install('plugin','CudaLint')
+                if not self.is_installed('plugin','CudaLint'):
+                    self.install('plugin','CudaLint')
                 for i in to_install[T_LINTER]:
-                    self.Install(T_LINTER,i)
+                    self.install(T_LINTER,i)
             if to_install[T_TREE]:
-                if not self.IsInstalled('plugin','CudaTree'):
-                    self.Install('plugin','CudaTree')
+                if not self.is_installed('plugin','CudaTree'):
+                    self.install('plugin','CudaTree')
                 for i in to_install[T_TREE]:
-                    self.Install(T_TREE,i)
+                    self.install(T_TREE,i)
             if to_install[T_SNIP]:
-                if not self.IsInstalled('plugin','Snippets'):
-                    self.Install('plugin','Snippets')
+                if not self.is_installed('plugin','Snippets'):
+                    self.install('plugin','Snippets')
                 for i in to_install[T_SNIP]:
-                    self.Install(T_SNIP,i)
+                    self.install(T_SNIP,i)
             for i in to_install[T_INTEL]:
-                self.Install('plugin',i)
+                self.install('plugin',i)
             for i in to_install[T_OTHER]:
-                self.Install('plugin',i)
+                self.install('plugin',i)
+            self.unshow_progerss()
         
                                         
 
     def on_start(self, ed_self):
-        self.OpenMenu()
+        self.open_menu()
