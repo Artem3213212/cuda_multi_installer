@@ -6,6 +6,8 @@ USER_JSON = os.path.join(app_path(APP_DIR_SETTINGS), 'user.json')
 
 def str_to_bool(s):
     return s == '1'
+def bool_to_str(v):
+    return '1' if v else '0'
 
 T_LEXER='lexer'
 T_LINTER='linter'
@@ -251,7 +253,7 @@ class Command:
                                 line = 0
                             UI.append('\1'.join([
                                             'type=label',
-                                            'pos='+str(5+300*cl)+','+str(line*h+5)+','+str(295+300*cl)+','+str(line*20+25),
+                                            'pos=%d,%d,%d,%d'%(5+300*cl, line*h+5, 295+300*cl, line*20+25),
                                             'cap='+CLASSES_MSGS[curr_class]
                                             ]))
                             UI_reg.append(())
@@ -260,27 +262,20 @@ class Command:
                                 if line==COLUMN_LEN:
                                     cl+=1
                                     line = 0
-                                if not self.is_installed(curr_class,pl):
-                                    UI.append('\1'.join([
-                                                    'type=check',
-                                                    'pos='+str(5+300*cl)+','+str(line*h)+','+str(295+300*cl)+','+str(line*20+25),
-                                                    'cap='+pl.replace('_',' '),
-                                                    'en=1'
-                                                    ]))
-                                else:
-                                    UI.append('\1'.join([
-                                                    'type=check',
-                                                    'pos='+str(5+300*cl)+','+str(line*h)+','+str(295+300*cl)+','+str(line*20+25),
-                                                    'cap='+pl.replace('_',' '),
-                                                    'en=0'
-                                                    ]))                                            
+                                flag_en = not self.is_installed(curr_class,pl)
+                                UI.append('\1'.join([
+                                                'type=check',
+                                                'pos=%d,%d,%d,%d'%(5+300*cl, line*h, 295+300*cl, line*20+25),
+                                                'cap='+pl.replace('_',' '),
+                                                'en='+bool_to_str(flag_en)
+                                                ]))
                                 UI_reg.append((curr_class,pl))
                                 line+=1
                 if cl!=0:
                     line=COLUMN_LEN
                 UI = ['\1'.join([
                             'type=button',
-                            'pos='+str(215+300*cl)+','+str(line*h+5)+','+str(295+300*cl)+','+str(line*20+25),
+                            'pos=%d,%d,%d,%d'%(215+300*cl, line*h+5, 295+300*cl, line*20+25),
                             'cap=Next'
                             ])] + UI
                 line+=1
