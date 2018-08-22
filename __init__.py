@@ -225,8 +225,8 @@ class Command:
             '\1'.join(['type=checklistbox','pos=5,25,295,260','items='+
                 '\t'.join(langs)
                 ]),
-            '\1'.join(['type=button','pos=5,265,65,295','cap=Cancel']),
-            '\1'.join(['type=button','pos=235,265,295,295','cap=Next']),
+            '\1'.join(['type=button','pos=5,265,85,295','cap=Cancel']),
+            '\1'.join(['type=button','pos=215,265,295,295','cap=Next']),
             ]),
             get_dict=True
             )
@@ -235,51 +235,49 @@ class Command:
         if res['clicked']!=RES_NEXT:
             return
             
-        if True:
-            if True:
-                res_list = res[RES_LIST].split(',')
-                for i,f in enumerate(map(str_to_bool,res_list)):
-                    if f:
-                        cl = 0
-                        line = 0
-                        UI = []
-                        UI_reg = [()]
-                        for curr_class in CLASSES:
-                                pls = PLUGINS[langs[i]].setdefault(curr_class)
-                                if pls:
-                                    if line in (COLUMN_LEN,COLUMN_LEN-1):
-                                        cl+=1
-                                        line = 0
-                                    UI.append('\1'.join(['type=label','pos='+str(5+300*cl)+','+str(line*h+5)+','+str(295+300*cl)+','+str(line*20+25),'cap='+CLASSES_MSGS[curr_class]]))
-                                    UI_reg.append(())
-                                    line+=1
-                                    for pl in pls:
-                                        if line==COLUMN_LEN:
-                                            cl+=1
-                                            line = 0
-                                        if not self.is_installed(curr_class,pl):
-                                            UI.append('\1'.join(['type=check','pos='+str(5+300*cl)+','+str(line*h)+','+str(295+300*cl)+','+str(line*20+25),'cap='+pl.replace('_',' '),'en=1']))
-                                        else:
-                                            UI.append('\1'.join(['type=check','pos='+str(5+300*cl)+','+str(line*h)+','+str(295+300*cl)+','+str(line*20+25),'cap='+pl.replace('_',' '),'en=0']))                                            
-                                        UI_reg.append((curr_class,pl))
-                                        line+=1
-                        if cl!=0:
-                            line=COLUMN_LEN
-                        UI = ['\1'.join(['type=button','pos='+str(235+300*cl)+','+str(line*h+5)+','+str(295+300*cl)+','+str(line*20+25),'cap=Next'])] + UI
-                        line+=1
-                        cl+=1
-                        res2 = dlg_custom(
-                                'Select add-ons - '+langs[i], 
-                                300*cl, 
-                                line*h+15, 
-                                '\n'.join(UI),
-                                get_dict=True
-                                )
-                        if res2:
-                            if res2['clicked']==0:
-                                for ii in range(len(UI_reg)):
-                                    if UI_reg[ii] and res2[ii]=='1':
-                                        to_install[UI_reg[ii][0]].append(UI_reg[ii][1])
+        res_list = res[RES_LIST].split(',')
+        for i,f in enumerate(map(str_to_bool,res_list)):
+            if f:
+                cl = 0
+                line = 0
+                UI = []
+                UI_reg = [()]
+                for curr_class in CLASSES:
+                        pls = PLUGINS[langs[i]].setdefault(curr_class)
+                        if pls:
+                            if line in (COLUMN_LEN,COLUMN_LEN-1):
+                                cl+=1
+                                line = 0
+                            UI.append('\1'.join(['type=label','pos='+str(5+300*cl)+','+str(line*h+5)+','+str(295+300*cl)+','+str(line*20+25),'cap='+CLASSES_MSGS[curr_class]]))
+                            UI_reg.append(())
+                            line+=1
+                            for pl in pls:
+                                if line==COLUMN_LEN:
+                                    cl+=1
+                                    line = 0
+                                if not self.is_installed(curr_class,pl):
+                                    UI.append('\1'.join(['type=check','pos='+str(5+300*cl)+','+str(line*h)+','+str(295+300*cl)+','+str(line*20+25),'cap='+pl.replace('_',' '),'en=1']))
+                                else:
+                                    UI.append('\1'.join(['type=check','pos='+str(5+300*cl)+','+str(line*h)+','+str(295+300*cl)+','+str(line*20+25),'cap='+pl.replace('_',' '),'en=0']))                                            
+                                UI_reg.append((curr_class,pl))
+                                line+=1
+                if cl!=0:
+                    line=COLUMN_LEN
+                UI = ['\1'.join(['type=button','pos='+str(235+300*cl)+','+str(line*h+5)+','+str(295+300*cl)+','+str(line*20+25),'cap=Next'])] + UI
+                line+=1
+                cl+=1
+                res2 = dlg_custom(
+                        'Select add-ons - '+langs[i], 
+                        300*cl, 
+                        line*h+15, 
+                        '\n'.join(UI),
+                        get_dict=True
+                        )
+                if res2:
+                    if res2['clicked']==0:
+                        for ii in range(len(UI_reg)):
+                            if UI_reg[ii] and res2[ii]=='1':
+                                to_install[UI_reg[ii][0]].append(UI_reg[ii][1])
         f = False
         for i in to_install.items():
             if i:
