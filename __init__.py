@@ -168,29 +168,8 @@ COLUMN_LEN=20
 class Command:
     
     def __init__(self):
-        self.h=dlg_proc(0, DLG_CREATE)
-        dlg_proc(self.h, DLG_PROP_SET, prop={
-                    'cap': 'Progress',
-                    'w': 100,
-                    'h': 30,
-                    'w_min': 100,
-                    'h_min': 30,
-                    'border': DBORDER_TOOL})
-        self.n=dlg_proc(self.h, DLG_CTL_ADD, 'label')
-        dlg_proc(self.h, DLG_CTL_PROP_SET, index=self.n, prop={
-            'name': 'label0',
-            'cap': 'Installing... Please wait.',
-            'x': 5,
-            'y': 5,
-            'w': 50})
-        
-    def show_progerss(self):
-        dlg_proc(self.h, DLG_SHOW_NONMODAL)
+        pass
                 
-            
-    def hide_progerss(self):
-        dlg_proc(self.h, DLG_HIDE)
-        
     def load_repo(self):
         self.packets = cuda_addonman.work_remote.get_remote_addons_list(cuda_addonman.opt.ch_def+cuda_addonman.opt.ch_user)
         self.installed_list = cuda_addonman.work_local.get_installed_list()
@@ -205,19 +184,19 @@ class Command:
         return False
         
     def install(self,kind,name):
-        print(name)
+        #print('  '+kind+' '+name)
         for i in self.packets:
             if i['kind']==kind and i['name']==name:
-                State='Installation '+name+'('+kind+')'                    
+                state='Installing: %s %s'%(kind,name)
+                msg_status(state, True)                    
                 #download
                 fn = cuda_addonman.work_remote.get_plugin_zip(i['url'])
                 if not os.path.isfile(fn):
-                    msg_status(State+'Cannot download file')
+                    msg_status(state+' - Cannot download', True)
                     return
                     
                 ok = file_open(fn, options='/silent')
-
-                msg_status(State+'Addon installed' if ok else State+'Installation cancelled')
+                msg_status(state+(' - Installed' if ok else ' - Cancelled'), True)
 
                 #save version
                 if kind in cuda_addonman.KINDS_WITH_VERSION:
@@ -227,7 +206,7 @@ class Command:
                         with open(filename_ver, 'w') as f:
                             f.write(i['v'])
                 return
-        print('Not found',name,'')
+        #print('  '+kind+' '+name+' - Not found')
         
     def open_menu(self):
         self.load_repo()
@@ -291,7 +270,6 @@ class Command:
                 f = True
                 break
         if f:            
-            self.show_progerss()
             for i in to_install[T_LEXER]:
                 self.install(T_LEXER,i)
             if to_install[T_LINTER]:
@@ -313,7 +291,7 @@ class Command:
                 self.install('plugin',i)
             for i in to_install[T_OTHER]:
                 self.install('plugin',i)
-            self.hide_progerss()    
+            msg_status('Multi Installer: done', True)
 
     def on_start(self, ed_self):
         if not os.path.exists(USER_JSON):
