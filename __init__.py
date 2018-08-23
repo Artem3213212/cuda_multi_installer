@@ -11,7 +11,6 @@ def str_to_bool(s):
 def bool_to_str(v):
     return '1' if v else '0'
 
-
 class Command:
 
     def load_repo(self):
@@ -20,20 +19,28 @@ class Command:
         import cuda_addonman # do it here for faster Cud start
 
         db = urllib.request.urlopen(URL_DB).read().decode("utf-8")
-        exec("global T_LEXER,T_LINTER,T_TREE,T_INTEL,T_SNIP,T_OTHER,CLASSES,PLUGINS_CLASSES,CLASSES_MSGS,PLUGINS\n"+db)
+        exec("global T_LEXER,T_LINTER,T_TREE,T_INTEL,T_SNIP,T_OTHER,CLASSES,TYPE_TO_KIND,CLASSES_MSGS,PLUGINS\n"+db)
 
         self.packets = cuda_addonman.work_remote.get_remote_addons_list(cuda_addonman.opt.ch_def+cuda_addonman.opt.ch_user)
         self.installed_list = cuda_addonman.work_local.get_installed_list()
+
+    def get_module(self,kind,name):
+    
+        k = TYPE_TO_KIND.get(kind)
+        if not k:
+            return ''
+        for i in self.packets:
+            if i['kind']==k and i['name']==name:
+                return i.get('module','')
+        return ''
         
     def is_installed(self,kind,name):
 
-        if kind in PLUGINS_CLASSES:
-            return name in list(map(cuda_addonman.work_local.get_name_of_module,self.installed_list))
-        elif kind == T_TREE:
-            return 'cuda_tree_'+name.lower() in self.installed_list
-        elif kind == T_LINTER:
-            return 'cuda_lint_'+name.lower() in self.installed_list
-        return False
+        m = self.get_module(kind,name)
+        res = m and m in self.installed_list
+        #if res:
+        #    print('installed:', kind,name)
+        return res                
         
     def install(self,kind,name):
 
