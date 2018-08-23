@@ -205,8 +205,4 @@ class Command:
     def on_start(self, ed_self):
 
         if not os.path.exists(TEST_CFG):
-            # disable on_start for later faster work
-            fn = os.path.join(os.path.dirname(__file__), 'install.inf')
-            ini_write(fn, 'item1', 'events', '')
-
             self.open_menu()
