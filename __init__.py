@@ -25,7 +25,7 @@ class Command:
         self.installed_list = cuda_addonman.work_local.get_installed_list()
 
     def get_module(self,kind,name):
-    
+
         k = TYPE_TO_KIND.get(kind)
         if not k:
             return ''
@@ -35,37 +35,47 @@ class Command:
         return ''
 
     def get_url(self,kind,name):
-    
+
         k = TYPE_TO_KIND.get(kind)
         for i in self.packets:
             if i['kind']==k and i['name']==name:
                 return (i['url'], i['v'])
         return ('', '')
-            
+
     def is_installed(self,kind,name):
+
+        if kind==T_LEXER:
+            d = os.path.join(app_path(APP_DIR_DATA), 'lexlib')
+            lst = os.listdir(d)
+            lst = [i.lower() for i in lst]
+            name_file = name.lower().replace('_', ' ')+'.lcf'
+            res = name_file in lst
+            #if res:
+            #    print('lexer installed:', name)
+            return res
 
         m = self.get_module(kind,name)
         res = m and m in self.installed_list
         #if res:
         #    print('installed:', kind,name)
-        return res                
-        
+        return res
+
     def install(self,kind,name):
 
         url, version = self.get_url(kind,name)
         if not url:
             print('Not found: '+kind+' '+name)
             return
-        
+
         state='Installing: %s %s'%(kind,name)
         print(state)
-        msg_status(state, True)                    
+        msg_status(state, True)
 
         fn = cuda_addonman.work_remote.get_plugin_zip(url)
         if not os.path.isfile(fn):
             msg_status(state+' - Cannot download', True)
             return
-                    
+
         ok = file_open(fn, options='/silent')
         msg_status(state+(' - Installed' if ok else ' - Cancelled'), True)
 
@@ -76,8 +86,8 @@ class Command:
                 filename_ver = os.path.join(dir_addon, 'v.inf')
                 with open(filename_ver, 'w') as f:
                     f.write(version)
-                    
-        
+
+
     def open_menu(self):
 
         self.load_repo()
@@ -106,9 +116,9 @@ class Command:
             return
         if res['clicked']!=RES_NEXT:
             return
-            
+
         res_list = res[RES_LIST].split(';')[1].split(',')
-        res_list = map(str_to_bool,res_list) 
+        res_list = map(str_to_bool,res_list)
         for i,f in enumerate(res_list):
             if f:
                 cl = 0
@@ -151,9 +161,9 @@ class Command:
                 line+=1
                 cl+=1
                 res2 = dlg_custom(
-                        'Select add-ons - '+langs[i], 
-                        300*cl, 
-                        line*h+15, 
+                        'Select add-ons - '+langs[i],
+                        300*cl,
+                        line*h+15,
                         '\n'.join(UI),
                         get_dict=True
                         )
@@ -167,7 +177,7 @@ class Command:
             if i:
                 f = True
                 break
-        if f:            
+        if f:
             for i in to_install[T_LEXER]:
                 self.install(T_LEXER,i)
             if to_install[T_LINTER]:
