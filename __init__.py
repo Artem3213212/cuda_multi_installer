@@ -1,21 +1,26 @@
 import os
-import cuda_addonman
 import urllib.request
 from cudatext import *
 
 TEST_CFG = os.path.join(app_path(APP_DIR_SETTINGS), 'history.json')
 URL_DB = 'https://raw.githubusercontent.com/Alexey-T/CudaText-registry/master/multi_inst/db.py'
+COLUMN_LEN = 20
 
 def str_to_bool(s):
     return s == '1'
 def bool_to_str(v):
     return '1' if v else '0'
 
-COLUMN_LEN=20
 
 class Command:
+
     def load_repo(self):
+
+        global cuda_addonman
+        import cuda_addonman # do it here for faster Cud start
+
         exec("global T_LEXER,T_LINTER,T_TREE,T_INTEL,T_SNIP,T_OTHER,CLASSES,PLUGINS_CLASSES,CLASSES_MSGS,PLUGINS\n"+urllib.request.urlopen(URL_DB).read().decode("utf-8"))
+
         self.packets = cuda_addonman.work_remote.get_remote_addons_list(cuda_addonman.opt.ch_def+cuda_addonman.opt.ch_user)
         self.installed_list = cuda_addonman.work_local.get_installed_list()
         
@@ -57,8 +62,6 @@ class Command:
         
     def open_menu(self):
 
-        global cuda_addonman
-        import cuda_addonman # do it here for faster on_start
         self.load_repo()
 
         langs = list(PLUGINS.keys())
