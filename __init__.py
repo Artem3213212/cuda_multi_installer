@@ -33,7 +33,15 @@ class Command:
             if i['kind']==k and i['name']==name:
                 return i.get('module','')
         return ''
-        
+
+    def get_url(self,kind,name):
+    
+        k = TYPE_TO_KIND.get(kind)
+        for i in self.packets:
+            if i['kind']==k and i['name']==name:
+                return (i['url'], i['v'])
+        return ('', '')
+            
     def is_installed(self,kind,name):
 
         m = self.get_module(kind,name)
@@ -44,29 +52,31 @@ class Command:
         
     def install(self,kind,name):
 
-        print('Installing: '+kind+' '+name)
-        for i in self.packets:
-            if i['kind']==kind and i['name']==name:
-                state='Installing: %s %s'%(kind,name)
-                msg_status(state, True)                    
-                #download
-                fn = cuda_addonman.work_remote.get_plugin_zip(i['url'])
-                if not os.path.isfile(fn):
-                    msg_status(state+' - Cannot download', True)
-                    return
-                    
-                ok = file_open(fn, options='/silent')
-                msg_status(state+(' - Installed' if ok else ' - Cancelled'), True)
+        url, version = self.get_url(kind,name)
+        if not url:
+            print('Not found: '+kind+' '+name)
+            return
+        
+        state='Installing: %s %s'%(kind,name)
+        print(state)
+        msg_status(state, True)                    
 
-                #save version
-                if kind in cuda_addonman.KINDS_WITH_VERSION:
-                    dir_addon = app_path(APP_DIR_INSTALLED_ADDON)
-                    if dir_addon:
-                        filename_ver = os.path.join(dir_addon, 'v.inf')
-                        with open(filename_ver, 'w') as f:
-                            f.write(i['v'])
-                return
-        print('Not found: '+kind+' '+name)
+        fn = cuda_addonman.work_remote.get_plugin_zip(url)
+        if not os.path.isfile(fn):
+            msg_status(state+' - Cannot download', True)
+            return
+                    
+        ok = file_open(fn, options='/silent')
+        msg_status(state+(' - Installed' if ok else ' - Cancelled'), True)
+
+        #save version
+        if TYPE_TO_KIND.get(kind) in cuda_addonman.KINDS_WITH_VERSION:
+            dir_addon = app_path(APP_DIR_INSTALLED_ADDON)
+            if dir_addon:
+                filename_ver = os.path.join(dir_addon, 'v.inf')
+                with open(filename_ver, 'w') as f:
+                    f.write(version)
+                    
         
     def open_menu(self):
 
@@ -161,24 +171,24 @@ class Command:
             for i in to_install[T_LEXER]:
                 self.install(T_LEXER,i)
             if to_install[T_LINTER]:
-                if not self.is_installed('plugin','CudaLint'):
-                    self.install('plugin','CudaLint')
+                if not self.is_installed(T_OTHER,'CudaLint'):
+                    self.install(T_OTHER,'CudaLint')
                 for i in to_install[T_LINTER]:
                     self.install(T_LINTER,i)
             if to_install[T_TREE]:
-                if not self.is_installed('plugin','CudaTree'):
-                    self.install('plugin','CudaTree')
+                if not self.is_installed(T_OTHER,'CudaTree'):
+                    self.install(T_OTHER,'CudaTree')
                 for i in to_install[T_TREE]:
                     self.install(T_TREE,i)
             if to_install[T_SNIP]:
-                if not self.is_installed('plugin','Snippets'):
-                    self.install('plugin','Snippets')
+                if not self.is_installed(T_OTHER,'Snippets'):
+                    self.install(T_OTHER,'Snippets')
                 for i in to_install[T_SNIP]:
                     self.install(T_SNIP,i)
             for i in to_install[T_INTEL]:
-                self.install('plugin',i)
+                self.install(T_INTEL,i)
             for i in to_install[T_OTHER]:
-                self.install('plugin',i)
+                self.install(T_OTHER,i)
             msg_status('Multi Installer: done', True)
 
     def on_start(self, ed_self):
