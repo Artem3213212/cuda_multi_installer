@@ -19,7 +19,8 @@ class Command:
         global cuda_addonman
         import cuda_addonman # do it here for faster Cud start
 
-        exec("global T_LEXER,T_LINTER,T_TREE,T_INTEL,T_SNIP,T_OTHER,CLASSES,PLUGINS_CLASSES,CLASSES_MSGS,PLUGINS\n"+urllib.request.urlopen(URL_DB).read().decode("utf-8"))
+        db = urllib.request.urlopen(URL_DB).read().decode("utf-8")
+        exec("global T_LEXER,T_LINTER,T_TREE,T_INTEL,T_SNIP,T_OTHER,CLASSES,PLUGINS_CLASSES,CLASSES_MSGS,PLUGINS\n"+db)
 
         self.packets = cuda_addonman.work_remote.get_remote_addons_list(cuda_addonman.opt.ch_def+cuda_addonman.opt.ch_user)
         self.installed_list = cuda_addonman.work_local.get_installed_list()
