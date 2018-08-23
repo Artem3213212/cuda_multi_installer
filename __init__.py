@@ -102,7 +102,7 @@ class Command:
 
         RES_LIST = 1
         RES_NEXT = 3
-        res = dlg_custom('Multi Installer', 300, 300, '\n'.join([
+        res = dlg_custom('CudaText Multi Installer', 300, 300, '\n'.join([
             '\1'.join(['type=label','pos=5,5,200,0','cap=Select languages:']),
             '\1'.join(['type=checklistbox','pos=5,25,295,260','items='+
                 '\t'.join(langs)
@@ -204,4 +204,8 @@ class Command:
     def on_start(self, ed_self):
 
         if not os.path.exists(TEST_CFG):
+            # disable on_start for later faster work
+            fn = os.path.join(os.path.dirname(__file__), 'install.inf')
+            ini_write(fn, 'item1', 'events', '')
+
             self.open_menu()
