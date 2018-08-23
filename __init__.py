@@ -1,7 +1,8 @@
 import os
 from cudatext import *
+import cuda_addonman
+import urllib.request
 
-TEST_CFG = os.path.join(app_path(APP_DIR_SETTINGS), 'history.json')
 URL_DB = 'https://raw.githubusercontent.com/Alexey-T/CudaText-registry/master/multi_inst/db.py'
 COLUMN_LEN = 20
 
@@ -13,11 +14,6 @@ def bool_to_str(v):
 class Command:
 
     def load_repo(self):
-
-        # do imports here for faster on_start
-        global cuda_addonman
-        import cuda_addonman
-        import urllib.request
 
         db = urllib.request.urlopen(URL_DB).read().decode("utf-8")
         exec("global T_LEXER,T_LINTER,T_TREE,T_INTEL,T_SNIP,T_OTHER,CLASSES,TYPE_TO_KIND,CLASSES_MSGS,PLUGINS\n"+db)
@@ -202,7 +198,3 @@ class Command:
                 self.install(T_OTHER,i)
             msg_status('Multi Installer: done', True)
 
-    def on_start(self, ed_self):
-
-        if not os.path.exists(TEST_CFG):
-            self.open_menu()
