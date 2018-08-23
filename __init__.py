@@ -1,5 +1,4 @@
 import os
-import urllib.request
 from cudatext import *
 
 TEST_CFG = os.path.join(app_path(APP_DIR_SETTINGS), 'history.json')
@@ -15,8 +14,10 @@ class Command:
 
     def load_repo(self):
 
+        # do imports here for faster on_start
         global cuda_addonman
-        import cuda_addonman # do it here for faster Cud start
+        import cuda_addonman
+        import urllib.request
 
         db = urllib.request.urlopen(URL_DB).read().decode("utf-8")
         exec("global T_LEXER,T_LINTER,T_TREE,T_INTEL,T_SNIP,T_OTHER,CLASSES,TYPE_TO_KIND,CLASSES_MSGS,PLUGINS\n"+db)
