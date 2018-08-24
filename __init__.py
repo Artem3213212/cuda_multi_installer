@@ -189,12 +189,14 @@ class Command:
                         for ii in range(len(UI_reg)):
                             if UI_reg[ii] and res2[ii]=='1':
                                 to_install[UI_reg[ii][0]].append(UI_reg[ii][1])
-        f = False
-        for i in to_install.items():
-            if i:
-                f = True
+
+        fill = False
+        for i in to_install.keys():
+            if to_install[i]:
+                fill = True
                 break
-        if f:
+                
+        if fill:
             for i in to_install[T_LEXER]:
                 self.install(T_LEXER,i)
             if to_install[T_LINTER]:
@@ -217,4 +219,5 @@ class Command:
             for i in to_install[T_OTHER]:
                 self.install(T_OTHER,i)
             msg_status('Multi Installer: done', True)
-
+        else:
+            msg_status('Multi Installer: nothing selected', True)
