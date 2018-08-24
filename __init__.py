@@ -126,8 +126,8 @@ class Command:
 
         res_list = res[RES_LIST].split(';')[1].split(',')
         res_list = list(map(str_to_bool,res_list))
-        page_count = sum(map(int,res_list))
-        page_index = 1
+        step_count = sum(map(int,res_list))+1
+        step_index = 2
 
         for i,f in enumerate(res_list):
             if f:
@@ -172,11 +172,11 @@ class Command:
                     ['\1'.join([
                             'type=label',
                             'pos=%d,%d,%d,0'%(100+300*cl, line*h+8, 215+300*cl),
-                            'cap=Step %d of %d'%(page_index+1, page_count+1)
+                            'cap=Step %d of %d'%(step_index,step_count)
                             ])]
                 line+=1
                 cl+=1
-                page_index += 1
+                step_index += 1
                 res2 = dlg_custom(
                         'Select add-ons - '+langs[i],
                         300*cl,
