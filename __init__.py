@@ -85,11 +85,11 @@ class Command:
         msg_status(state, True)
 
         fn = cuda_addonman.work_remote.get_plugin_zip(url)
-        
+
         # handle SF.net HTML error file
         if is_file_html(fn):
             os.remove(fn)
-        
+
         if not os.path.isfile(fn):
             msg_status(state+' - Cannot download', True)
             self.error_count += 1
@@ -211,7 +211,7 @@ class Command:
             if v:
                 fill = True
                 break
-                
+
         if fill:
             self.error_count = 0
             for i in to_install[T_LEXER]:
@@ -235,10 +235,10 @@ class Command:
                 self.install(T_INTEL,i)
             for i in to_install[T_OTHER]:
                 self.install(T_OTHER,i)
-                
+
             msg_status('Multi Installer: done', True)
             if self.error_count>0:
                 msg_box('There were %d download error(s)'%self.error_count, MB_OK+MB_ICONERROR)
-            
+
         else:
             msg_status('Multi Installer: nothing selected', True)
