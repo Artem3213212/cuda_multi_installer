@@ -20,8 +20,6 @@ def is_file_html(fn):
 
 
 class Command:
-    error_count = 0
-    ok_count = 0
 
     def load_repo(self):
 
@@ -32,7 +30,7 @@ class Command:
             self.installed_list = []
             return
 
-        exec("global T_LEXER,T_LINTER,T_TREE,T_INTEL,T_SNIP,T_OTHER,CLASSES,TYPE_TO_KIND,CLASSES_MSGS,PLUGINS\n"+db)
+        exec(db)
 
         self.packets = cuda_addonman.work_remote.get_remote_addons_list(cuda_addonman.opt.ch_def+cuda_addonman.opt.ch_user)
         self.installed_list = cuda_addonman.work_local.get_installed_list()
